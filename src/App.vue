@@ -11,5 +11,6 @@ export default {
 </script>
 
 <style lang="scss">
+$card-bg: transparent;
 @import '../node_modules/bootstrap/scss/bootstrap.scss'
 </style>

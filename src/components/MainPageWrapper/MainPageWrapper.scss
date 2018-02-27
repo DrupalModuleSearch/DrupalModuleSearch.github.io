@@ -38,24 +38,4 @@ body {
   }
 }
 
-.result {
-  margin:0 0 20px;
-  padding: 20px;
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 1px 3px #aaa;
-  h3 {
-    margin-top: 0;
-    font-weight: bold;
-  }
-  p {
-    margin-bottom: 0.5rem;
-    &.body {
-      font-style: italic;
-      color: $gray-600;
-    }
-  }
-  .badge {
-    font-weight: normal;
-  }
-}
+

@@ -8,21 +8,32 @@
           </a>
         </div>
         <div class="col-sm-10">
-          <form id="searchform">
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                  </span>
-                </div>
-                <input type="search" class="form-control" id="searchbox" placeholder="Search">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
               </div>
+              <input
+                type="search"
+                class="form-control"
+                v-model="mutableQuery"
+                @input="runSearch"
+                placeholder="Search"
+                />
             </div>
-          </form>
+          </div>
 
           <div id="searchSummary"></div>
-          <div id="searchFacets" class="card-group"></div>
+          <div id="searchFacets">
+            <Facet
+              v-for="aggregation in aggregations"
+              :aggregation="aggregation"
+              :key="aggregation.id"
+              v-on:toggleFacet="toggleFacet"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -30,11 +41,39 @@
 </template>
 
 <script>
+import _debounce from 'lodash/debounce';
+import Facet from './Facet/Facet';
 
 export default {
+  props: {
+    query: {
+      type: String,
+    },
+    aggregations: {
+      type: Array,
+    },
+  },
+  components: {
+    Facet,
+  },
+  data() {
+    return {
+      mutableQuery: this.query,
+    };
+  },
   methods: {
     toggleSidebar() {
       this.$emit('toggleSidebar');
+    },
+    toggleFacet(key, value) {
+      this.$emit('toggleFacet', key, value);
+    },
+  },
+  computed: {
+    runSearch() {
+      return _debounce(function inputCaptured(e) {
+        this.$emit('runSearch', e.srcElement.value);
+      }, 250).bind(this);
     },
   },
 };

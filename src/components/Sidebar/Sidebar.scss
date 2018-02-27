@@ -111,63 +111,10 @@ $collapsed-size: 64px;
     background-color: $gray-800;
   }
 }
-#searchform {
+#sidebar-wrapper {
   .input-group-text {
     background-color: $gray-900;
     border: 0;
     color: $gray-100;
-  }
-}
-
-#searchFacets {
-  .card {
-    border-radius: 0;
-    border-width: 0;
-  }
-  .card-header {
-    cursor: pointer;
-    background-color: $gray-900;
-    color: $gray-100;
-    border: 0;
-    border-radius: 0;
-
-    &:hover {
-      background: $gray-800;
-    }
-    .icon {
-      @include fa-icon;
-      @extend .fa-chevron-down;
-    }
-    &.collapsed {
-      .icon {
-        @extend .fa-chevron-right;
-      }
-    }
-  }
-  .list-group {
-    border:0;
-  }
-  .list-group-item {
-    line-height: 1;
-    cursor: pointer;
-    background-color: $gray-700;
-    border:0;
-    border-radius:0;
-
-    // .value {
-    //   // @include text-overflow; // @todo update to bootstrap 4
-    //   width: 85%;
-    //   display: inline-block;
-    // }
-
-    &:hover {
-      background: $gray-800;
-    }
-    &.refined {
-      background-color: $primary;
-      .badge {
-        background-color: lighten($primary, 20%);
-      }
-    }
   }
 }
