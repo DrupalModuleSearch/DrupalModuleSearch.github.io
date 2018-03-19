@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" v-bind:class="{ toggled: sidebarExpanded }">
+  <div id="wrapper" v-bind:class="{ sidebarToggled: sidebarExpanded }" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
     <Sidebar
       v-on:toggleSidebar="toggleSidebar"
       v-on:runSearch="updateQuery"
@@ -7,7 +7,7 @@
       :query="query"
       :aggregations="aggregations"
       />
-    <MainPageWrapper :hits="hits" />
+    <MainPageWrapper :hits="hits" :searchInProgress="searchInProgress" />
   </div>
 </template>
 
@@ -32,9 +32,25 @@ export default {
       sidebarExpanded: false,
       hits: null,
       aggregations: null,
+      page: 0,
+      loadMoreEnabled: false,
+      searchInProgress: false,
     };
   },
   methods: {
+    loadMore() {
+      if (this.loadMoreEnabled && !this.searchInProgress) {
+        this.page += 1;
+        this.searchInProgress = true;
+        ES.search(this.query.length ? this.query : '*', this.page)
+          .then((response) => {
+            this.hits.push(...response.hits.hits);
+            this.aggregations = response.aggregations;
+            this.loadMoreEnabled = (ES.pageLength === response.hits.hits.length);
+          })
+          .finally(() => { this.searchInProgress = false; });
+      }
+    },
     toggleSidebar() {
       this.sidebarExpanded = !this.sidebarExpanded;
     },
@@ -93,12 +109,16 @@ export default {
             ES.activeFacets[key] = null;
           }
         });
+        this.page = 0;
+        this.searchInProgress = true;
 
-        ES.search(routeParams.query.length ? routeParams.query : '*', ES.activeFacets)
+        ES.search((routeParams.query !== undefined && routeParams.query.length) ? routeParams.query : '*', 0)
           .then((response) => {
             this.hits = response.hits.hits;
             this.aggregations = response.aggregations;
-          });
+            this.loadMoreEnabled = (ES.pageLength === response.hits.hits.length);
+          })
+          .finally(() => { this.searchInProgress = false; });
       },
     },
   },

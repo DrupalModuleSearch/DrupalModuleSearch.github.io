@@ -1,10 +1,8 @@
 <template>
-  <div class="col-md-4">
+  <div class="resultWrapper">
     <div class="result">
       <h3><a :href="hit._source.url">{{ hit._source.title }}</a></h3>
-      <p class="small">
-        <span class="url"><a :href="hit._source.url">{{ hit._source.url }}</a></span>
-      </p>
+      <p class="small url"><a :href="hit._source.url">{{ hit._source.url }}</a></p>
       <p class="badge-group">
         <span v-if="hit._source.author" class="badge badge-pill badge-secondary">
           <i class="fa fa-user"></i> {{ hit._source.author }}
@@ -18,17 +16,12 @@
         <span v-if="hit._source.development_status" class="badge badge-pill badge-secondary">
           <i class="fa fa-code"></i> {{ hit._source.development_status }}
         </span>
-      </p>
-      <p class="body" v-if="hit.highlight" v-html="hit.highlight.body[0]" />
-      <p class="badge-group">
         <span
           v-for="category in hit._source.category"
           :key="category"
           class="badge badge-pill badge-secondary">
           <i class="fa fa-tag"></i> {{ category }}
         </span>
-      </p>
-      <p class="badge-group">
         <span
           v-for="compatibility in hit._source.compatibility"
           :key="compatibility"
@@ -40,6 +33,7 @@
           <i class="fa fa-code-fork"></i> Project Type: {{ hit._source.project_type }}
         </span>
       </p>
+      <p class="small body" v-if="hit.highlight" v-html="hit.highlight.body[0]" />
     </div>
   </div>
 </template>

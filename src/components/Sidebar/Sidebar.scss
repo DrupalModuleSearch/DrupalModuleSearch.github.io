@@ -18,7 +18,7 @@ $collapsed-size: 64px;
       height: 36px;
       overflow: hidden;
     }
-    &.toggled {
+    &.sidebarToggled {
       #sidebar-wrapper {
         height: auto;
       }
@@ -40,7 +40,7 @@ $collapsed-size: 64px;
   #wrapper {
     padding-left: 0;
 
-    &.toggled {
+    &.sidebarToggled {
       padding-left: $expanded-size;
       #sidebar-wrapper {
         width: $expanded-size;
@@ -78,7 +78,7 @@ $collapsed-size: 64px;
 
   #wrapper {
     padding-left: $expanded-size;
-    &.toggled {
+    &.sidebarToggled {
       padding-left: $collapsed-size;
       #sidebar-wrapper {
         width: $collapsed-size;

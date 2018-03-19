@@ -1,3 +1,17 @@
+.resultWrapper {
+  @include make-col-ready();
+
+  @include media-breakpoint-up(md) { @include make-col(12) }
+  @include media-breakpoint-up(lg) { @include make-col(6) }
+  @include media-breakpoint-up(xl) { @include make-col(4) }
+}
+.sidebarToggled {
+  .resultWrapper {
+    @include media-breakpoint-up(md) { @include make-col(6) }
+    @include media-breakpoint-up(lg) { @include make-col(4) }
+    @include media-breakpoint-up(xl) { @include make-col(3) }
+  }
+}
 .result {
   margin:0 0 20px;
   padding: 20px;
@@ -8,6 +22,10 @@
     margin-top: 0;
     font-weight: bold;
   }
+  .url {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
   p {
     margin-bottom: 0.5rem;
     &.body {
@@ -16,11 +34,12 @@
     }
     &.badge-group {
       display: flex;
-      // flex-flow: column;
-      align-items: flex-start;
+      flex-wrap: wrap;
+      // align-items: flex-start;
       .badge {
         font-weight: normal;
-        margin-right: 0.5em;
+        margin: 0 0.5em 0.5em 0;
+        flex: 1;
       }
     }
   }

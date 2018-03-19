@@ -13,12 +13,14 @@ const facetMap = {
   author: { fieldName: 'author.keyword', title: 'Authors' },
 };
 const activeFacets = {};
+const pageLength = 18;
 
-function search(query) {
+function search(query, page) {
   return client.search({
     index: 'drupal',
-    // type: myType,
     body: {
+      from: page * pageLength,
+      size: pageLength,
       query: {
         bool: {
           must: {
@@ -40,7 +42,7 @@ function search(query) {
             .filter(v => !!v),
         },
       },
-      explain: true,
+      // explain: true,
       highlight: {
         fields: { body: {} },
       },
@@ -71,4 +73,4 @@ function search(query) {
   }));
 }
 
-export default { search, facetMap, activeFacets };
+export default { search, facetMap, activeFacets, pageLength };

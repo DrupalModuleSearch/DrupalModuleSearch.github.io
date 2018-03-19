@@ -1,10 +1,11 @@
 import Vue from 'vue';
-// import BootstrapVue from 'bootstrap-vue';
+import infiniteScroll from 'vue-infinite-scroll';
 import App from './App';
 import router from './router';
 
+Vue.use(infiniteScroll);
+
 Vue.config.productionTip = false;
-// Vue.use(BootstrapVue);
 
 /* eslint-disable no-new */
 new Vue({
