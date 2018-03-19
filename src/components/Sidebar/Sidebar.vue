@@ -42,13 +42,11 @@
 
 <script>
 import _debounce from 'lodash/debounce';
+import ES from '@/elasticsearch';
 import Facet from './Facet/Facet';
 
 export default {
   props: {
-    query: {
-      type: String,
-    },
     aggregations: {
       type: Array,
     },
@@ -58,7 +56,7 @@ export default {
   },
   data() {
     return {
-      mutableQuery: this.query,
+      mutableQuery: ES.query,
     };
   },
   methods: {

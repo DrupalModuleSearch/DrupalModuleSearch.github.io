@@ -8,7 +8,6 @@
       v-on:toggleSidebar="toggleSidebar"
       v-on:runSearch="updateQuery"
       v-on:toggleFacet="toggleFacet"
-      :query="query"
       :aggregations="aggregations"
       />
     <MainPageWrapper :hits="hits" :searchInProgress="searchInProgress" />
@@ -21,12 +20,6 @@ import MainPageWrapper from '@/components/MainPageWrapper/MainPageWrapper';
 import ES from '@/elasticsearch';
 
 export default {
-  props: {
-    query: {
-      default: '',
-      type: String,
-    },
-  },
   components: {
     Sidebar,
     MainPageWrapper,
@@ -46,7 +39,8 @@ export default {
       if (this.loadMoreEnabled && !this.searchInProgress) {
         this.page += 1;
         this.searchInProgress = true;
-        ES.search(this.query.length ? this.query : '*', this.page)
+
+        ES.search(this.page)
           .then((response) => {
             this.hits.push(...response.hits.hits);
             this.aggregations = response.aggregations;
@@ -59,8 +53,15 @@ export default {
       this.sidebarExpanded = !this.sidebarExpanded;
     },
     updateQuery(query) {
+      ES.query = query;
+      this.updateRoute();
+    },
+    updateRoute() {
       // Params starts with query.
-      const params = { query };
+      const params = { query: ES.query };
+      if (params.query === undefined || params.query.length === 0) {
+        params.query = '-';
+      }
 
       // Now add a param for each of the facetMap. Each param will be at least '-'.
       Object.keys(ES.facetMap).forEach((key) => {
@@ -71,7 +72,7 @@ export default {
       });
 
       // Strip any trailing - placeholders from the URL
-      Object.keys(ES.facetMap).reverse().some((key) => {
+      ['query', ...Object.keys(ES.facetMap)].reverse().some((key) => {
         if (params[key] === '-') {
           // Remove key
           delete params[key];
@@ -99,7 +100,7 @@ export default {
         ES.activeFacets[key].push(value);
       }
 
-      this.updateQuery(this.query);
+      this.updateRoute();
     },
   },
   watch: {
@@ -113,10 +114,17 @@ export default {
             ES.activeFacets[key] = null;
           }
         });
+
+        if (routeParams.query === undefined || routeParams.query.length === 0 || routeParams.query === '-') {
+          ES.query = undefined;
+        } else {
+          ES.query = routeParams.query;
+        }
+
         this.page = 0;
         this.searchInProgress = true;
 
-        ES.search((routeParams.query !== undefined && routeParams.query.length) ? routeParams.query : '*', 0)
+        ES.search(0)
           .then((response) => {
             this.hits = response.hits.hits;
             this.aggregations = response.aggregations;

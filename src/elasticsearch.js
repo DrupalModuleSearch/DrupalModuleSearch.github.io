@@ -13,9 +13,15 @@ const facetMap = {
   author: { fieldName: 'author.keyword', title: 'Authors' },
 };
 const activeFacets = {};
+const query = '';
 const pageLength = 18;
 
-function search(query, page) {
+function search(page) {
+  let queryString = '*';
+  if (this.query !== undefined && this.query.length > 0 && this.query !== '-') {
+    queryString = this.query;
+  }
+
   return client.search({
     index: 'drupal',
     body: {
@@ -25,7 +31,7 @@ function search(query, page) {
         bool: {
           must: {
             simple_query_string: {
-              query,
+              query: queryString,
               fields: ['title^5', 'project_machine_name^4', 'body'],
             },
           },
@@ -73,4 +79,4 @@ function search(query, page) {
   }));
 }
 
-export default { search, facetMap, activeFacets, pageLength };
+export default { search, facetMap, activeFacets, query, pageLength };
