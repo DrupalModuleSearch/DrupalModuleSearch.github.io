@@ -2,13 +2,12 @@
   <div class="resultWrapper">
     <div class="result">
       <h3><a :href="hit._source.url">{{ hit._source.title }}</a></h3>
-      <p class="small url"><a :href="hit._source.url">{{ hit._source.url }}</a></p>
       <p class="badge-group">
         <span v-if="hit._source.author" class="badge badge-pill badge-secondary">
           <i class="fa fa-user"></i> {{ hit._source.author }}
         </span>
         <span v-if="hit._source.download_count" class="badge badge-pill badge-secondary">
-          <i class="fa fa-download"></i> Downloads: {{ hit._source.download_count }}
+          <i class="fa fa-download"></i> {{ hit._source.download_count | formatLongNumber }}
         </span>
         <span v-if="hit._source.maintenance_status" class="badge badge-pill badge-secondary">
           <i class="fa fa-cog"></i> {{ hit._source.maintenance_status }}
@@ -30,7 +29,7 @@
         </span>
 
         <span v-if="hit._source.project_type" class="badge badge-pill badge-primary">
-          <i class="fa fa-code-fork"></i> Project Type: {{ hit._source.project_type }}
+          <i class="fa fa-code-fork"></i> {{ hit._source.project_type }}
         </span>
       </p>
       <p class="small body" v-if="hit.highlight" v-html="hit.highlight.body[0]" />
@@ -41,6 +40,14 @@
 <script>
 export default {
   props: ['hit'],
+  filters: {
+    formatLongNumber(number) {
+      const decimalPlaces = 1;
+      const base = Math.floor(Math.log(Math.abs(number)) / Math.log(1000));
+      const suffix = 'kmbt'[base - 1];
+      return suffix ? (number / (1000 ** base)).toFixed(decimalPlaces) + suffix : number;
+    },
+  },
 };
 </script>
 
