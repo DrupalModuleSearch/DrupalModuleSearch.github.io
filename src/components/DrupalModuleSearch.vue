@@ -1,5 +1,9 @@
 <template>
-  <div id="wrapper" v-bind:class="{ sidebarToggled: sidebarExpanded }" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10">
+  <div id="wrapper"
+       v-bind:class="{ sidebarToggled: sidebarExpanded }"
+       v-infinite-scroll="loadMore"
+       infinite-scroll-disabled="busy"
+       infinite-scroll-distance="10">
     <Sidebar
       v-on:toggleSidebar="toggleSidebar"
       v-on:runSearch="updateQuery"
