@@ -4,6 +4,8 @@ An Elastic Search and VueJS powered module and theme search for Drupal.
 
 See: https://drupalmodulesearch.github.io/
 
+TravisCI page builder: [![Build Status](https://travis-ci.com/DrupalModuleSearch/DrupalModuleSearch.github.io.svg?branch=src)](https://travis-ci.com/DrupalModuleSearch/DrupalModuleSearch.github.io)
+
 ## Build Setup
 
 ``` bash
