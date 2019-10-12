@@ -32,7 +32,7 @@ function search(page) {
           must: {
             simple_query_string: {
               query: queryString,
-              fields: ['title^5', 'project_machine_name^4', 'body'],
+              fields: ['title^10', 'project_machine_name^4', 'body'],
             },
           },
           filter: Object.keys(activeFacets)
@@ -45,7 +45,7 @@ function search(page) {
               }
               return null;
             })
-            .filter(v => !!v),
+            .filter((v) => !!v),
         },
       },
       // explain: true,
@@ -60,9 +60,9 @@ function search(page) {
         return previous;
       }, {}),
     },
-  }).then(resp => ({
+  }).then((resp) => ({
     hits: resp.hits,
-    aggregations: Object.keys(resp.aggregations).map(key => ({
+    aggregations: Object.keys(resp.aggregations).map((key) => ({
       key,
       name: facetMap[key].title,
       items: resp.aggregations[key].buckets.map((bucket) => {
@@ -79,4 +79,6 @@ function search(page) {
   }));
 }
 
-export default { search, facetMap, activeFacets, query, pageLength };
+export default {
+  search, facetMap, activeFacets, query, pageLength,
+};

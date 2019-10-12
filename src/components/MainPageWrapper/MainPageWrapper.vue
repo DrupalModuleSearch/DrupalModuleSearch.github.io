@@ -28,7 +28,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import './MainPageWrapper.scss'
-</style>

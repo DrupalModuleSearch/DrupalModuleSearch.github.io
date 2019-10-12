@@ -25,20 +25,18 @@
 </template>
 
 <script>
-import bCollapse from 'bootstrap-vue/es/components/collapse/collapse';
-import bToggle from 'bootstrap-vue/es/directives/toggle/toggle';
+import Vue from 'vue';
+
+import { BCollapse, VBToggle } from 'bootstrap-vue'
+Vue.component('b-collapse', BCollapse);
+Vue.directive('b-toggle', VBToggle);
+
 
 export default {
   props: {
     aggregation: {
       type: Object,
     },
-  },
-  components: {
-    'b-collapse': bCollapse,
-  },
-  directives: {
-    'b-toggle': bToggle,
   },
   methods: {
     refine(e) {
@@ -47,7 +45,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-@import './Facet.scss'
-</style>

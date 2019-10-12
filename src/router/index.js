@@ -5,7 +5,7 @@ import ES from '@/elasticsearch';
 
 Vue.use(Router);
 
-const pathParams = ['query'].concat(Object.keys(ES.facetMap)).map(key => `:${key}?`).join('/');
+const pathParams = ['query'].concat(Object.keys(ES.facetMap)).map((key) => `:${key}?`).join('/');
 export default new Router({
   routes: [
     {

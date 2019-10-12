@@ -16,7 +16,3 @@
 <script>
 export default {};
 </script>
-
-<style lang="scss">
-@import './Spinner.scss'
-</style>
