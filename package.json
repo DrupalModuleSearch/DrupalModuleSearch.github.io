@@ -15,7 +15,7 @@
     "deploy": "npm run build; push-dir --dir=dist --branch=master --cleanup"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.1",
     "elasticsearch-browser": "^14.1.0",
     "font-awesome": "^4.7.0",
