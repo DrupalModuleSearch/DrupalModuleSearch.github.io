@@ -1,15 +1,16 @@
 language: node_js
 node_js:
-  - "stable"
+- stable
 cache:
   directories:
-    - node_modules
+  - node_modules
 script:
-  - yarn run build
+- yarn run build
 deploy:
   provider: pages:git
   edge: true
-  token: $github_token
+  token:
+    secure: NxvTemDKto9KXwYs+dIprr6tmmzjvi+NXvGIVqMG0xaOhWLa0R3AtGqHzb9X9JiHahkPc8ZY/eqO/Qk5TefU/rnW2qDWzMy/E7eCjO2AEweIceDEHkkMcZH8XeFpaYXH3yHQ0/V8duAZ9aeVkp9V6mhXit87hq1vKqZtgxp4QnExLJfjKtXm4nPZFPR6Pq9hsvXy8o7MRr1kp7R2NG6eMJ59m+fsvos39BSpF3Yy0o9ERM96VEsEm36NE4xNhnFskH5s+5mbUUXaTP9W+9r04Smlj5l+0wHHTuEcqLcIAJMET1yprA1KQ6/HlP/uwOF7xP/o6DC0Am8hLRf+qwEil4UnhZ3g5D3HLcSZEAnZZb8QugPcRogYGIOHgZp9xCOxeNTpZCllDTG7eRvEn600V6XV8XDr0bC5So90fU55ZHxMRsI1ckMopPj1DdJ+6Psq0SloCbj+CVz/5HNgqfsN+mvRV37lc0HO/uWHrNpE4B1qXNBSm2hWjI6+sCuLvTxGIRxXQsN4jzrvlSHFMER5TIZgTHeCYreepJ7GkaefVxmYJfNKr2Bfzvw1cq7xLSPDQ65WHRv/5o96TpWwjLxJTlncWFPLqeJ4/uncHm8WgqIP4EeSys478u7lzAmbBA8oKvHx1eRhw3qNXz5jTAxLv5Ki3tAvwswKXsKMvfs0Ivo=
   local_dir: dist
   on:
     branch: src
