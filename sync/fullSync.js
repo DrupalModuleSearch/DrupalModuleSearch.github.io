@@ -54,7 +54,8 @@ function getTerms(tids) {
 function getProjects(currentPage) {
   return getNodes(currentPage, {
     status: 1,
-    type: 'project_module',
+//     type: ['project_module', 'project_theme'],
+    type: 'project_theme',
   });
 }
 
@@ -69,6 +70,7 @@ async function buildObj(node) {
     title: node.title,
     body: node.body.value, // @TODO - strip tags?
     url: node.url,
+    type: node.type,
     project_type: node.field_project_type,
     project_machine_name: node.field_project_machine_name,
     download_count: parseInt(node.field_download_count, 10),
@@ -128,6 +130,8 @@ async function buildObj(node) {
 
 
 (async () => {
+  let lastPage = undefined;
+
   for (let page = START_PAGE; page < MAX_PAGES; page += 1) {
     console.log(`Processing page ${page}...`);
     let bail = false;
@@ -135,6 +139,9 @@ async function buildObj(node) {
     let queryTime = 0, indexTime = 0;
     await getProjects(page)
       .then(response => {
+        if (lastPage === undefined) {
+          lastPage = new URLSearchParams(new URL(response.body.last).search).get('page');
+        }
         queryTime = (new Date().getTime()) - startTime;
         return Promise.all(response.body.list.map(buildObj))
       })
@@ -148,7 +155,7 @@ async function buildObj(node) {
       })
       .then(clientResponse => {
         indexTime = (new Date().getTime()) - startTime;
-        console.log(`Page ${page} done! Indexed ${clientResponse.body.items.length} items ${clientResponse.body.errors ? 'with errors' : 'without errors'}. API Took ${queryTime}ms. Index took ${indexTime}`);
+        console.log(`Page ${page} / ${lastPage} done! Indexed ${clientResponse.body.items.length} items ${clientResponse.body.errors ? 'with errors' : 'without errors'}. API Took ${queryTime}ms. Index took ${indexTime}`);
       })
       .catch(error => {
         if (error.statusCode === 404) {

@@ -5,7 +5,7 @@ const client = new es.Client({
 });
 
 const facetMap = {
-  type: { fieldName: 'type', title: 'Type', labels: { project_module: 'Module' } },
+  type: { fieldName: 'type', title: 'Type', labels: { project_module: 'Module', project_theme: 'Theme' } },
   project_type: { fieldName: 'project_type', title: 'Project Type' },
   compatibility: { fieldName: 'compatibility', title: 'Compatibility' },
   category: { fieldName: 'category', title: 'Categories' },
@@ -24,7 +24,7 @@ function search(page) {
   }
 
   return client.search({
-    index: 'prod_drupal',
+    index: 'local_drupal',
     body: {
       from: page * pageLength,
       size: pageLength,
