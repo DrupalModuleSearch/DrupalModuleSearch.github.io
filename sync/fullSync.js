@@ -1,17 +1,20 @@
-require('dotenv').config();
+require('events').EventEmitter.defaultMaxListeners = 205
+
+require('dotenv').config({
+  path: require('path').resolve(process.cwd(), 'sync', '.env')
+});
 const got = require('got');
 
 const API_BASE_URI = 'https://www.drupal.org/api-d7';
-const MAX_PAGES = 3;
-const LIMIT = process.env.LIMIT || 10;
-const START_PAGE = process.env.START_PAGE || 0;
+const MAX_PAGES = parseInt(process.env.MAX_PAGES, 10) || 3;
+const LIMIT = parseInt(process.env.LIMIT, 10) || 10;
+const START_PAGE = parseInt(process.env.START_PAGE, 10) || 0;
 
-// const ELASTIC_INDEX = process.env.ELASTIC_INDEX;
-
+const { Client } = require('@elastic/elasticsearch')
+const client = new Client({ node: process.env.ELASTIC_HOST })
 
 const Keyv = require('keyv');
 const KeyvFile = require('keyv-file');
-
 const store = new KeyvFile({ filename: './sync/cache.msgpack' });
 const cache = new Keyv({ store });
 
@@ -32,10 +35,13 @@ function getNodes(currentPage, params) {
 }
 
 function getTerms(tids) {
-  return get(`${API_BASE_URI}/taxonomy_term.json`, {
-    query: tids.map(tid => `tid[]=${tid}`).join('&'),
-    json: true,
-  });
+  if (tids.length > 0) {
+    return get(`${API_BASE_URI}/taxonomy_term.json`, {
+      query: tids.map(tid => `tid[]=${tid}`)
+        .join('&'),
+      json: true,
+    });
+  }
 }
 
 
@@ -52,7 +58,8 @@ function checkCore(project, core) {
 
 
 async function buildObj(node) {
-  const obj = {
+  const doc = {
+    id: node.nid,
     title: node.title,
     body: node.body.value, // @TODO - strip tags?
     url: node.url,
@@ -66,7 +73,7 @@ async function buildObj(node) {
   const promises = [
     node.taxonomy_vocabulary_44 === undefined ? null : getTerms([node.taxonomy_vocabulary_44.id]),
     node.taxonomy_vocabulary_46 === undefined ? null : getTerms([node.taxonomy_vocabulary_46.id]),
-    node.taxonomy_vocabulary_3 === undefined ? null : getTerms(node.taxonomy_vocabulary_3.map(term => term.id)),
+    node.taxonomy_vocabulary_3  === undefined ? null : getTerms(node.taxonomy_vocabulary_3.map(term => term.id)),
   ];
 
   if (node.field_project_type !== 'sandbox') {
@@ -82,17 +89,17 @@ async function buildObj(node) {
       let i = 0;
 
       if (promiseResults[i] && promiseResults[i].body) {
-        obj.maintenance_status = promiseResults[i].body.list[0].name;
+        doc.maintenance_status = promiseResults[i].body.list[0].name;
       }
       i += 1;
 
       if (promiseResults[i] && promiseResults[i].body) {
-        obj.development_status = promiseResults[i].body.list[0].name;
+        doc.development_status = promiseResults[i].body.list[0].name;
       }
       i += 1;
 
       if (promiseResults[i] && promiseResults[i].body) {
-        obj.category = promiseResults[2].body.list.map(term => term.name);
+        doc.category = promiseResults[2].body.list.map(term => term.name);
       }
       i += 1;
 
@@ -100,17 +107,18 @@ async function buildObj(node) {
       ['5.x', '6.x', '7.x', '8.x'].forEach((core) => {
         if (promiseResults[i] && promiseResults[i].body) {
           if (promiseResults[i].body.indexOf('<project_status>published</project_status>') >= 0) {
-            obj.compatibility.push(core);
+            doc.compatibility.push(core);
           }
         }
         i += 1;
       });
     });
 
-  // batch.body.push({ index: { _index: ELASTIC_INDEX, _type: 'project', _id: node.nid } });
-  // batch.body.push(obj);
-
-  return obj;
+  return [
+    { index: { _index: process.env.ELASTIC_INDEX } },
+    doc
+  ]
+//   return obj;
 }
 
 
@@ -119,7 +127,19 @@ async function buildObj(node) {
     console.log(`Processing page ${page}...`);
     await getProjects(page)
       .then(response => Promise.all(response.body.list.map(buildObj)))
-      .then(data => console.log('DATA DONE', data));
+      .then(data => [].concat(...data)) // Flatten the array
+      .then(data => {
+//         console.log(data);
+        return client.bulk({
+          index: process.env.ELASTIC_INDEX,
+          body: data
+        })
+      })
+      .catch(error => console.log(error.body));
+
+    const { body: count } = await client.count({ index: process.env.ELASTIC_INDEX })
+    console.log(count.count)
+
     console.log(`Page ${page} done!`);
   }
 })();
