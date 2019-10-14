@@ -10,8 +10,14 @@ const MAX_PAGES = parseInt(process.env.MAX_PAGES, 10) || 3;
 const LIMIT = parseInt(process.env.LIMIT, 10) || 10;
 const START_PAGE = parseInt(process.env.START_PAGE, 10) || 0;
 
-const { Client } = require('@elastic/elasticsearch')
-const client = new Client({ node: process.env.ELASTIC_HOST })
+const { Client } = require('@elastic/elasticsearch');
+const client = new Client({
+  node: process.env.ELASTIC_HOST,
+  auth: {
+    username: process.env.ELASTIC_USER,
+    password: process.env.ELASTIC_PASS
+  }
+});
 
 const Keyv = require('keyv');
 const KeyvFile = require('keyv-file');
