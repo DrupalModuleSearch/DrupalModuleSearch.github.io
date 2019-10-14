@@ -64,8 +64,8 @@ function checkCore(project, core) {
 
 
 async function buildObj(node) {
+  console.log(`${node.nid} : ${node.title}`);
   const doc = {
-    id: node.nid,
     title: node.title,
     body: node.body.value, // @TODO - strip tags?
     url: node.url,
@@ -73,7 +73,7 @@ async function buildObj(node) {
     project_machine_name: node.field_project_machine_name,
     download_count: parseInt(node.field_download_count, 10),
     compatibility: [],
-    author: node.author.name,
+    author: node.author ? node.author.name : 'Unknown',
   };
 
   const promises = [
@@ -121,79 +121,47 @@ async function buildObj(node) {
     });
 
   return [
-    { index: { _index: process.env.ELASTIC_INDEX } },
+    { index: { _index: process.env.ELASTIC_INDEX, _id: node.nid } },
     doc
   ]
-//   return obj;
 }
 
 
 (async () => {
   for (let page = START_PAGE; page < MAX_PAGES; page += 1) {
     console.log(`Processing page ${page}...`);
+    let bail = false;
+    let startTime = new Date().getTime();
+    let queryTime = 0, indexTime = 0;
     await getProjects(page)
-      .then(response => Promise.all(response.body.list.map(buildObj)))
+      .then(response => {
+        queryTime = (new Date().getTime()) - startTime;
+        return Promise.all(response.body.list.map(buildObj))
+      })
       .then(data => [].concat(...data)) // Flatten the array
       .then(data => {
-//         console.log(data);
+        startTime = new Date().getTime()
         return client.bulk({
           index: process.env.ELASTIC_INDEX,
           body: data
         })
       })
-      .catch(error => console.log(error.body));
+      .then(clientResponse => {
+        indexTime = (new Date().getTime()) - startTime;
+        console.log(`Page ${page} done! Indexed ${clientResponse.body.items.length} items ${clientResponse.body.errors ? 'with errors' : 'without errors'}. API Took ${queryTime}ms. Index took ${indexTime}`);
+      })
+      .catch(error => {
+        if (error.statusCode === 404) {
+          bail = true;
+          console.log('API 404, end of results');
+        }
+        else {
+          console.log(error)
+        }
+      });
 
-    const { body: count } = await client.count({ index: process.env.ELASTIC_INDEX })
-    console.log(count.count)
-
-    console.log(`Page ${page} done!`);
+    if (bail) {
+      break;
+    }
   }
 })();
-
-/*
-for (let page = START_PAGE, resultsPromise = getProjects(page); page < MAX_PAGES; page += 1) {
-  resultsPromise.then((response) => {
-    const batch = { body: [] };
-    // console.log(response.body.list);
-
-    response.body.list.forEach((node) => {
-      console.log(node.title);
-      // Build basic object to index.
-      const obj = {
-        title: node.title,
-        body: node.body.value, // @TODO - strip tags?
-        url: node.url,
-        project_type: node.field_project_type,
-        project_machine_name: node.field_project_machine_name,
-        download_count: parseInt(node.field_download_count, 10),
-        compatibility: [],
-        maintenance_status: null,
-        development_status: null,
-        category: [],
-      };
-
-      if (node.taxonomy_vocabulary_44 !== undefined) {
-        const maintenancStatus = await getTerms([node.taxonomy_vocabulary_44.id]);
-        if (maintenancStatus) {
-          obj.maintenance_status = maintenancStatus.name;
-        }
-      }
-
-      batch.body.push({ index: { _index: ELASTIC_INDEX, _type: 'project', _id: node.nid } });
-      batch.body.push(obj);
-    });
-
-    console.log(batch);
-  });
-}
-*/
-
-/*
-//.then((termsResponse) => {
-// termsResponse.body.list.forEach((term) => {
-//   const objKey = vocabs[term.vocabulary.id];
-//   obj[objKey] = term.name;
-// });
-// console.log(termsResponse);
-// });
-*/
