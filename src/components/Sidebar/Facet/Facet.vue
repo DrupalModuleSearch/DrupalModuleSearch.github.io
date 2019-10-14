@@ -16,7 +16,7 @@
           :data-facet-value="item.key"
           v-on:click="refine"
         >
-          <div class="value small">{{ item.key }}</div>
+          <div class="value small">{{ item.key | formatFacetKey(aggregation.key) }}</div>
           <span class="badge badge-secondary badge-pill">{{ item.doc_count }}</span>
         </li>
       </ul>
@@ -28,6 +28,7 @@
 import Vue from 'vue';
 
 import { BCollapse, VBToggle } from 'bootstrap-vue'
+
 Vue.component('b-collapse', BCollapse);
 Vue.directive('b-toggle', VBToggle);
 
@@ -42,6 +43,6 @@ export default {
     refine(e) {
       this.$emit('toggleFacet', e.currentTarget.dataset.facetKey, e.currentTarget.dataset.facetValue);
     },
-  },
+  }
 };
 </script>

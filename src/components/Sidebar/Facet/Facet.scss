@@ -18,6 +18,7 @@ $fa-font-path: "~font-awesome/fonts";
   .icon {
     @include fa-icon;
     @extend .fa-chevron-down;
+    margin-right: 0.5rem;
   }
   &.collapsed {
     .icon {
@@ -34,12 +35,6 @@ $fa-font-path: "~font-awesome/fonts";
   background-color: $gray-700;
   border:0;
   border-radius:0;
-
-  // .value {
-  //   // @include text-overflow; // @todo update to bootstrap 4
-  //   width: 85%;
-  //   display: inline-block;
-  // }
 
   &:hover {
     background: $gray-800;

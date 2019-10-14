@@ -5,12 +5,13 @@ const client = new es.Client({
 });
 
 const facetMap = {
-  project_type: { fieldName: 'project_type.keyword', title: 'Project Type' },
-  compatibility: { fieldName: 'compatibility.keyword', title: 'Compatibility' },
-  category: { fieldName: 'category.keyword', title: 'Categories' },
-  maintenance_status: { fieldName: 'maintenance_status.keyword', title: 'Maintenance Status' },
-  development_status: { fieldName: 'development_status.keyword', title: 'Development Status' },
-  author: { fieldName: 'author.keyword', title: 'Authors' },
+  type: { fieldName: 'type', title: 'Type', labels: { project_module: 'Module' } },
+  project_type: { fieldName: 'project_type', title: 'Project Type' },
+  compatibility: { fieldName: 'compatibility', title: 'Compatibility' },
+  category: { fieldName: 'category', title: 'Categories' },
+  maintenance_status: { fieldName: 'maintenance_status', title: 'Maintenance Status' },
+  development_status: { fieldName: 'development_status', title: 'Development Status' },
+  author: { fieldName: 'author', title: 'Authors' },
 };
 const activeFacets = {};
 const query = '';
@@ -23,7 +24,7 @@ function search(page) {
   }
 
   return client.search({
-    index: 'drupal',
+    index: 'prod_drupal',
     body: {
       from: page * pageLength,
       size: pageLength,
