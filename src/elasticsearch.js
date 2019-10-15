@@ -24,7 +24,7 @@ function search(page) {
   }
 
   return client.search({
-    index: 'local_drupal',
+    index: 'prod_drupal',
     body: {
       from: page * pageLength,
       size: pageLength,
