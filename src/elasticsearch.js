@@ -1,4 +1,5 @@
 import es from 'elasticsearch-browser/elasticsearch';
+import CONFIG from './config.js'
 
 const client = new es.Client({
   host: 'https://elastic.thingy-ma-jig.co.uk/',
@@ -6,8 +7,8 @@ const client = new es.Client({
 
 const facetMap = {
   type: { fieldName: 'type', title: 'Type', labels: { project_module: 'Module', project_theme: 'Theme' } },
-  project_type: { fieldName: 'project_type', title: 'Project Type' },
   compatibility: { fieldName: 'compatibility', title: 'Compatibility' },
+  project_type: { fieldName: 'project_type', title: 'Project Type' },
   category: { fieldName: 'category', title: 'Categories' },
   maintenance_status: { fieldName: 'maintenance_status', title: 'Maintenance Status' },
   development_status: { fieldName: 'development_status', title: 'Development Status' },
@@ -24,7 +25,7 @@ function search(page) {
   }
 
   return client.search({
-    index: 'prod_drupal',
+    index: CONFIG.ELASTIC_INDEX,
     body: {
       from: page * pageLength,
       size: pageLength,
