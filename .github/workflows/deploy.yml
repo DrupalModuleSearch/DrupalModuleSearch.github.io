@@ -14,6 +14,12 @@ jobs:
     - uses: borales/actions-yarn@v2.0.0
       with:
         cmd: install
+    - name: Create File
+      uses: finnp/create-file-action@1.0.0
+      env: {
+        FILE_NAME: "src/config.js"
+        FILE_DATA: "export default { ELASTIC_INDEX: 'prod_drupal' }"
+      }
     - uses: borales/actions-yarn@v2.0.0
       with:
         cmd: build
