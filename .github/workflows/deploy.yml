@@ -10,21 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: borales/actions-yarn@v2.0.0
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install
+      uses: borales/actions-yarn@v2.0.0
       with:
         cmd: install
-    - uses: finnp/create-file-action@1.0.0
+    - name: Write config file
+      uses: finnp/create-file-action@1.0.0
       env:
         FILE_NAME: "src/config.js"
         FILE_DATA: "export default { ELASTIC_INDEX: 'prod_drupal' }"
-    - uses: borales/actions-yarn@v2.0.0
+    - name: Build
+      uses: borales/actions-yarn@v2.0.0
       with:
         cmd: build
-    - name: Build and Deploy
+    - name: Install SSH Client
+      uses: webfactory/ssh-agent@v0.2.0
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+    - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        SSH: true
         BRANCH: master
         FOLDER: 'dist'
         CLEAN: true
