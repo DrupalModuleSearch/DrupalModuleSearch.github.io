@@ -184,7 +184,6 @@ async function buildObj(node) {
               type: 'custom',
               tokenizer: 'standard',
               filter: [
-                'standard',
                 'lowercase',
                 'english_possessive_stemmer',
                 'english_stop',
