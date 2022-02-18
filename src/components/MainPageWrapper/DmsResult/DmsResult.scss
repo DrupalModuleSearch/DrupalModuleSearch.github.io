@@ -13,11 +13,6 @@
   }
 }
 .result {
-  margin:0 0 20px;
-  padding: 20px;
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 1px 3px #aaa;
   h3 {
     margin-top: 0;
     font-weight: bold;
@@ -26,21 +21,30 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
-  p {
-    margin-bottom: 0.5rem;
-    &.body {
-      font-style: italic;
-      color: $gray-600;
+  p.body {
+    font-style: italic;
+    color: $gray-600;
+    max-height: 4.5em;
+    overflow: hidden;
+    position: relative;
+
+    &:after {
+      content: '';
+      @include gradient-y(transparent, white);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3em;
     }
-    &.badge-group {
-      display: flex;
-      flex-wrap: wrap;
-      // align-items: flex-start;
-      .badge {
-        font-weight: normal;
-        margin: 0 0.5em 0.5em 0;
-        flex: 1;
-      }
+  }
+  .badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    .badge {
+      font-weight: normal;
+      margin: 0 0.5em 0.5em 0;
+      flex: 1;
     }
   }
 }

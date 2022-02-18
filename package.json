@@ -12,34 +12,32 @@
     "fullSync": "node sync/fullSync.js"
   },
   "dependencies": {
-    "bootstrap": "^4.0.0",
-    "bootstrap-vue": "^2.0",
-    "core-js": "^2.6.5",
+    "bootstrap": "^5.0",
+    "core-js": "^3.8.3",
     "elasticsearch-browser": "^16.4.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.5.0",
     "lodash": "^4.17.21",
-    "popper.js": "^1.12.9",
-    "vue": "^2.6.10",
-    "vue-infinite-scroll": "^2.0.2",
-    "vue-router": "^3.0.1"
+    "v3-infinite-loading": "^1.0.5",
+    "vue": "^3.0.0-beta.1",
+    "vue-router": "^4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
     "@elastic/elasticsearch": "^7.4.0",
-    "@vue/cli-plugin-babel": "^3.12.0",
-    "@vue/cli-plugin-eslint": "^3.12.0",
-    "@vue/cli-service": "^3.12.0",
-    "babel-eslint": "^10.0.1",
-    "dotenv": "^8.1.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "got": "^10",
+    "@vue/cli-plugin-babel": "~5.0.1",
+    "@vue/cli-plugin-eslint": "~5.0.1",
+    "@vue/cli-service": "~5.0.1",
+    "@vue/compiler-sfc": "^3.0.0-beta.1",
+    "dotenv": "^16.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "got": "^12",
     "keyv": "^4.0",
-    "keyv-file": "^0.1.13",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^8.0.0",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.36.0"
+    "keyv-file": "^0.2",
+    "sass": "^1.49.8",
+    "sass-loader": "^12.0",
+    "webpack": "^5.0"
   },
   "eslintConfig": {
     "root": true,
@@ -47,12 +45,11 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/strongly-recommended",
       "eslint:recommended"
     ],
-    "rules": {},
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     }
   },
   "postcss": {
@@ -66,7 +63,7 @@
     "not ie <= 8"
   ],
   "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 16.0.0",
+    "npm": ">= 8.0.0"
   }
 }

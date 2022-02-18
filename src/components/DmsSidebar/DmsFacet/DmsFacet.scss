@@ -1,0 +1,63 @@
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+.facet {
+  .card-header {
+    @include gradient-bg($gray-900);
+
+    cursor: pointer;
+    &, &:first-child {
+      border-radius: 0;
+    }
+
+    &:hover {
+      @include gradient-bg(lighten($gray-900, 2%));
+    }
+    .icon {
+      @include fa-icon;
+      @extend .fa-chevron-down;
+      margin-right: 0.5rem;
+      min-width: 16px;
+    }
+  }
+  .list-group {
+    transition: max-height ease 350ms;
+    max-height: 350px;
+    overflow-y: auto;
+
+    .list-group-item {
+      line-height: 1;
+      cursor: pointer;
+      background-color: $gray-800;
+      color: $light;
+
+      &:hover {
+        background: $gray-800;
+      }
+      &.refined {
+        background-color: $primary;
+        .count {
+          color: lighten($primary, 40%);
+        }
+      }
+
+      .value, .count {
+        font-size: $small-font-size;
+      }
+      .count {
+        color: $gray-500;
+      }
+    }
+  }
+
+  &.collapsed {
+    .list-group {
+      max-height: 0;
+    }
+    .card-header {
+      .icon {
+        @extend .fa-chevron-right;
+      }
+    }
+  }
+}

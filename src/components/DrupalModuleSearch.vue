@@ -1,28 +1,31 @@
 <template>
-  <div id="wrapper"
-       v-bind:class="{ sidebarToggled: sidebarExpanded }"
-       v-infinite-scroll="loadMore"
-       infinite-scroll-disabled="busy"
-       infinite-scroll-listen-for-event="doCheck"
-       infinite-scroll-distance="10">
-    <Sidebar
-      v-on:toggleSidebar="toggleSidebar"
-      v-on:runSearch="updateQuery"
-      v-on:toggleFacet="toggleFacet"
+  <div
+    id="wrapper"
+    :class="{ sidebarToggled: sidebarExpanded }"
+  >
+    <DmsSidebar
+      @toggleSidebar="toggleSidebar"
+      @runSearch="updateQuery"
+      @toggleFacet="toggleFacet"
       :aggregations="aggregations"
-      />
-    <MainPageWrapper :hits="hits" :searchInProgress="searchInProgress" />
+    />
+    <MainPageWrapper
+      :hits="hits"
+      :search-in-progress="searchInProgress"
+      :load-more="loadMore"
+      :reset-toggle="resetToggle"
+    />
   </div>
 </template>
 
 <script>
-import Sidebar from '@/components/Sidebar/Sidebar';
+import DmsSidebar from '@/components/DmsSidebar/DmsSidebar';
 import MainPageWrapper from '@/components/MainPageWrapper/MainPageWrapper';
 import ES from '@/elasticsearch';
 
 export default {
   components: {
-    Sidebar,
+    DmsSidebar,
     MainPageWrapper,
   },
   data() {
@@ -31,24 +34,31 @@ export default {
       hits: null,
       aggregations: null,
       page: 0,
-      loadMoreEnabled: false,
+      resetToggle: false,
       searchInProgress: false,
     };
   },
   methods: {
-    loadMore() {
-      if (this.loadMoreEnabled && !this.searchInProgress) {
-        this.page += 1;
-        this.searchInProgress = true;
+    loadMore($state) {
+      $state.loading();
+      this.page += 1;
+      this.searchInProgress = true;
 
-        ES.search(this.page)
-          .then((response) => {
-            this.hits.push(...response.hits.hits);
-            this.aggregations = response.aggregations;
-            this.loadMoreEnabled = (ES.pageLength === response.hits.hits.length);
-          })
-          .finally(() => { this.searchInProgress = false; });
-      }
+      ES.search(this.page)
+        .then((response) => {
+          this.hits.push(...response.hits.hits);
+          this.aggregations = response.aggregations;
+          if (response.hits.hits.length < ES.pageLength) {
+            $state.complete();
+          }
+        })
+        .catch(() => {
+          $state.error();
+        })
+        .finally(() => {
+          this.searchInProgress = false;
+          $state.loaded();
+        });
     },
     toggleSidebar() {
       this.sidebarExpanded = !this.sidebarExpanded;
@@ -82,8 +92,8 @@ export default {
         return true;
       });
 
-      // Set the route. This event will cause the properties on this component to get set via the
-      // router. This triggers the watched route params.
+      // Set the route. This event will cause the properties on this component
+      // to get set via the router. This triggers the watched route params.
       this.$router.push({
         name: 'DrupalModuleSearch',
         params,
@@ -105,13 +115,6 @@ export default {
     },
   },
   watch: {
-    'searchInProgress': {
-      handler(isInProgress) {
-        if (!isInProgress) {
-          this.$emit('doCheck')
-        }
-      }
-    },
     '$route.params': {
       immediate: true,
       handler(routeParams) {
@@ -131,14 +134,16 @@ export default {
 
         this.page = 0;
         this.searchInProgress = true;
+        this.resetToggle = !this.resetToggle;
 
         ES.search(0)
           .then((response) => {
             this.hits = response.hits.hits;
             this.aggregations = response.aggregations;
-            this.loadMoreEnabled = (ES.pageLength === response.hits.hits.length);
           })
-          .finally(() => { this.searchInProgress = false; });
+          .finally(() => {
+            this.searchInProgress = false;
+          });
       },
     },
   },

@@ -87,7 +87,6 @@ async function buildObj(node) {
     type: node.type,
     project_type: node.field_project_type,
     project_machine_name: node.field_project_machine_name,
-    download_count: parseInt(node.field_download_count, 10),
     compatibility: [],
     author: node.author ? node.author.name : 'Unknown',
   };
@@ -214,7 +213,6 @@ async function buildObj(node) {
           category             : { type : 'keyword' },
           compatibility        : { type : 'keyword' },
           development_status   : { type : "keyword" },
-          download_count       : { type : "integer" },
           id                   : { type : "integer" },
           maintenance_status   : { type : "keyword" },
           project_machine_name : { type : "text" },
