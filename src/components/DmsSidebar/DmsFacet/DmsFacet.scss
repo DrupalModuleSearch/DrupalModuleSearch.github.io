@@ -23,14 +23,10 @@ $fa-font-path: "~font-awesome/fonts";
     margin-right: 0.5rem;
     min-width: 16px;
   }
-  &.collapsed {
-    .icon {
-      @extend .fa-chevron-right;
-    }
-  }
 }
 .list-group {
   border:0;
+  transition: max-height ease 500ms;
 }
 .list-group-item {
   line-height: 1;
@@ -46,6 +42,17 @@ $fa-font-path: "~font-awesome/fonts";
     background-color: $primary;
     .badge {
       background-color: lighten($primary, 20%);
+    }
+  }
+}
+
+.card.collapsed {
+  .list-group {
+    max-height: 0;
+  }
+  .card-header {
+    .icon {
+      @extend .fa-chevron-right;
     }
   }
 }

@@ -1,28 +1,30 @@
 <template>
-  <div id="wrapper"
-       v-bind:class="{ sidebarToggled: sidebarExpanded }"
-       v-infinite-scroll="loadMore"
-       infinite-scroll-disabled="busy"
-       infinite-scroll-listen-for-event="doCheck"
-       infinite-scroll-distance="10">
-    <Sidebar
-      v-on:toggleSidebar="toggleSidebar"
-      v-on:runSearch="updateQuery"
-      v-on:toggleFacet="toggleFacet"
+  <div
+    id="wrapper"
+    :class="{ sidebarToggled: sidebarExpanded }"
+    @infinite="loadMore"
+  >
+    <DmsSidebar
+      @toggleSidebar="toggleSidebar"
+      @runSearch="updateQuery"
+      @toggleFacet="toggleFacet"
       :aggregations="aggregations"
-      />
-    <MainPageWrapper :hits="hits" :searchInProgress="searchInProgress" />
+    />
+    <MainPageWrapper
+      :hits="hits"
+      :search-in-progress="searchInProgress"
+    />
   </div>
 </template>
 
 <script>
-import Sidebar from '@/components/Sidebar/Sidebar';
+import DmsSidebar from '@/components/DmsSidebar/DmsSidebar';
 import MainPageWrapper from '@/components/MainPageWrapper/MainPageWrapper';
 import ES from '@/elasticsearch';
 
 export default {
   components: {
-    Sidebar,
+    DmsSidebar,
     MainPageWrapper,
   },
   data() {
