@@ -8,7 +8,10 @@
           </h3>
         </div>
       </div>
-      <div class="row">
+      <div
+        id="results"
+        class="row"
+      >
         <p v-if="hits == null">
           Lets do a search!
         </p>
@@ -18,7 +21,12 @@
           :key="hit._id"
         />
         <DmsSpinner v-if="searchInProgress" />
-        <div id="pager" />
+        <InfiniteLoading
+          @infinite="loadMore"
+          :distance="240"
+          :first-load="false"
+          :identifier="resetToggle"
+        />
       </div>
     </div>
   </div>
@@ -37,6 +45,14 @@ export default {
     searchInProgress: {
       type: Boolean,
       default: false
+    },
+    loadMore: {
+      type: Function,
+      required: true,
+    },
+    resetToggle: {
+      type: Boolean,
+      required: true,
     }
   },
   components: {

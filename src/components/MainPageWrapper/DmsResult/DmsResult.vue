@@ -1,6 +1,6 @@
 <template>
   <div class="resultWrapper">
-    <div class="result">
+    <div class="result p-3 mb-4 bg-white shadow-sm border border-gray">
       <h3><a :href="hit._source.url">{{ hit._source.title }}</a></h3>
       <div class="badge-group mb-2">
         <span
