@@ -6,6 +6,9 @@
 
 <style lang="scss">
   $card-bg: transparent;
+  $enable-gradients: true;
+  $enable-rounded: false;
+  
   @import '~bootstrap';
   @import './components/DmsSidebar/DmsSidebar.scss';
   @import './components/DmsSidebar/DmsFacet/DmsFacet.scss';

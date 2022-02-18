@@ -14,18 +14,16 @@
           </a>
         </div>
         <div class="col-sm-10">
-          <div class="form-group">
+          <div class="form-group mb-4">
             <div class="input-group">
-              <div class="input-group-prepend">
-                <span
-                  class="input-group-text"
-                  id="basic-addon1"
-                >
-                  <i
-                    class="fa fa-search"
-                    aria-hidden="true"
-                  />
-                </span>
+              <div
+                class="input-group-text"
+                id="basic-addon1"
+              >
+                <i
+                  class="fa fa-search"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 type="search"

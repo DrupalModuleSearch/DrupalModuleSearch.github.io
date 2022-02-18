@@ -13,7 +13,7 @@
 
     <ul
       :id="'collapse_' + aggregation.key"
-      class="list-group list-group-flush pre-scrollable"
+      class="list-group list-group-flush"
     >
       <li
         v-for="item in aggregation.items"
@@ -24,10 +24,10 @@
         :data-facet-value="item.key"
         @click="refine"
       >
-        <div class="value small">
+        <div class="value">
           {{ formatFacetKey(item.key, aggregation.key) }}
         </div>
-        <span class="badge badge-secondary badge-pill">{{ item.doc_count }}</span>
+        <span class="count">{{ item.doc_count }}</span>
       </li>
     </ul>
   </div>
