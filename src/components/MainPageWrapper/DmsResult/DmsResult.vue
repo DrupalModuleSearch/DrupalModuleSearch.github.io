@@ -23,12 +23,6 @@
           <i class="fa fa-code-fork" /> {{ formatFacetKey(hit._source.project_type, 'project_type') }}
         </span>
         <span
-          v-if="hit._source.download_count"
-          class="badge rounded-pill bg-secondary"
-        >
-          <i class="fa fa-download" /> {{ formatLongNumber(hit._source.download_count) }}
-        </span>
-        <span
           v-if="hit._source.author"
           class="badge rounded-pill bg-secondary"
         >
