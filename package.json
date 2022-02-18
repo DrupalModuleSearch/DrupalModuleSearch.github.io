@@ -32,9 +32,9 @@
     "dotenv": "^16.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "got": "^10",
+    "got": "^12",
     "keyv": "^4.0",
-    "keyv-file": "^0.1.13",
+    "keyv-file": "^0.2",
     "sass": "^1.49.8",
     "sass-loader": "^12.0",
     "webpack": "^5.0"
