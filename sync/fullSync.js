@@ -20,9 +20,13 @@ const elasticClient = new Client({
 });
 
 const Keyv = require('keyv');
-const KeyvFile = require('keyv-file');
-const store = new KeyvFile({ filename: './sync/cache.msgpack' });
-const cache = new Keyv({ store });
+const KeyvFile = require('keyv-file').KeyvFile;
+const cache = new Keyv({
+  store: new KeyvFile({
+    filename: './sync/cache.msgpack',
+    writeDelay: 100
+  })
+})
 
 const got = require('got');
 const gotApiClient = got.extend({
