@@ -9,7 +9,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "deploy": "npm run build; push-dir --dir=dist --branch=master --cleanup",
-    "fullSync": "node sync/fullSync.js"
+    "fullSync": "node sync/fullSync.mjs"
   },
   "dependencies": {
     "bootstrap": "^5.0",

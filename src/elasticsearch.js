@@ -2,7 +2,7 @@ import es from 'elasticsearch-browser/elasticsearch';
 import CONFIG from './config.js'
 
 const client = new es.Client({
-  host: 'https://elastic.thingy-ma-jig.co.uk/',
+  host: CONFIG.HOST,
 });
 
 const facetMap = {

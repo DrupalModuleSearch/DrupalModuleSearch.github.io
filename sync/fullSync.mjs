@@ -1,16 +1,24 @@
 /* eslint-disable no-console */
 
-require('events').EventEmitter.defaultMaxListeners = 500
+import EventEmitter from 'events'
+import got from 'got';
+import dotenv from 'dotenv';
+import path from 'path';
+import { Client } from '@elastic/elasticsearch';
+import Keyv from 'keyv';
+import { KeyvFile } from 'keyv-file';
 
-require('dotenv').config({
-  path: require('path').resolve(process.cwd(), 'sync', '.env')
+dotenv.config({
+  path: path.resolve(process.cwd(), 'sync', '.env')
 });
+
+
+EventEmitter.defaultMaxListeners = 500
 
 const MAX_PAGES = parseInt(process.env.MAX_PAGES, 10) || 3;
 const LIMIT = parseInt(process.env.LIMIT, 10) || 10;
 const START_PAGE = parseInt(process.env.START_PAGE, 10) || 0;
 
-const { Client } = require('@elastic/elasticsearch');
 const elasticClient = new Client({
   node: process.env.ELASTIC_HOST,
   auth: {
@@ -19,8 +27,6 @@ const elasticClient = new Client({
   }
 });
 
-const Keyv = require('keyv');
-const KeyvFile = require('keyv-file').KeyvFile;
 const cache = new Keyv({
   store: new KeyvFile({
     filename: './sync/cache.msgpack',
@@ -28,7 +34,6 @@ const cache = new Keyv({
   })
 })
 
-const got = require('got');
 const gotApiClient = got.extend({
   prefixUrl: 'https://www.drupal.org/api-d7',
   responseType: 'json',
@@ -42,11 +47,6 @@ const gotUpdateClient = got.extend({
   cache
 });
 
-
-
-// function get(url, params) {
-//   return gotClient(url, { ...params });
-// }
 
 
 function getNodes(currentPage, params) {
@@ -229,8 +229,8 @@ async function buildObj(node) {
     }
   }).catch(error => console.log(error.body))
 
-  for (let page = START_PAGE; page < MAX_PAGES; page += 1) {
-    console.log(`Processing page ${page}...`);
+  for (let page = START_PAGE; page < (lastPage || MAX_PAGES); page += 1) {
+    console.log(`Processing page ${page} of ${lastPage || 'unknown'}...`);
     let bail = false;
     let startTime = new Date().getTime();
     let queryTime = 0, indexTime = 0, indexed = 0;

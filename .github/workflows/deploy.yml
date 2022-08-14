@@ -20,7 +20,7 @@ jobs:
       uses: finnp/create-file-action@1.0.0
       env:
         FILE_NAME: "src/config.js"
-        FILE_DATA: "export default { ELASTIC_INDEX: 'prod_drupal' }"
+        FILE_DATA: "export default { HOST: 'https://elastic.thingy-ma-jig.co.uk/', ELASTIC_INDEX: 'prod_drupal' }"
     - name: Build
       uses: borales/actions-yarn@v2.3.0
       with:
