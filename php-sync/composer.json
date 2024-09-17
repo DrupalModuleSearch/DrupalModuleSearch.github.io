@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "sync": ["Composer\\Config::disableProcessTimeout", "@php sync.php"]
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.0",
+    "monolog/monolog": "^2.8",
+    "catfan/medoo": "^2.1",
+    "vlucas/phpdotenv": "^5.4",
+    "bramus/monolog-colored-line-formatter": "^3.0",
+    "ulrichsg/getopt-php": "^4.0",
+    "ext-simplexml": "*",
+    "caseyamcl/guzzle_retry_middleware": "^2.7",
+    "ext-pdo": "*"
+  }
+}
